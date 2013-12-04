@@ -1,0 +1,15 @@
+Contents:
+
+Subsets: Contains functions for listing and indexing subsets of a given set.
+Perm: Contains function for computing with permutations.
+ExteriorAlg: Contains functions for computing with exterior algebras, and implements the Element class.
+CyclePolynomials: Contains functions for computing with cycle polynomials, and implements the CyclePoly class.
+Bonus: Computes the values of the character.
+Interpolate: Interpolates the character as a cycle polynomial.
+
+Results:
+The i=2,i=3 cases have been solved and are stored in results.txt.
+
+Known issues:
+Numerical stability becomes poor for i>=4 in the current implementation of Bonus.
+
