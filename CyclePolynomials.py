@@ -6,7 +6,7 @@ from numpy import *
 from numpy.linalg import lstsq
 
 # zero cutoff for coefficients of a CyclePoly
-epsilon = .0005
+epsilon = .001
 
 # returns all monomials of degree d in r cycle variables
 # a monomial is represented as a list of integers, with the ith entry being the degree of the (i+1)st cycle variable
@@ -38,7 +38,7 @@ def weight(monomial):
 	multiplier, result = 1, 0
 	for degree in monomial:
 		result += multiplier * degree
-		multiplier += 3.3 / len(monomial)
+		multiplier += 2.5 / len(monomial)
 
 	return result 
 

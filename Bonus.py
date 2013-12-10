@@ -103,13 +103,16 @@ def characterV(n):
 
 # returns a dict containing the values of the kth exterior power of the permutation character on V_n
 def characterExtV(n, k):
-	result = {}
+	cycleTypes = Perm.partitions(1, n)
+
+	if k == 0:
+		return {tuple(cycleType): 1 for cycleType in cycleTypes}
+
 	if k == 1:
 		return characterV(n)
 
-	cycleTypes = Perm.partitions(1, n)
-	previousChars = [characterExtV(n, i) for i in range(1,k)]
-	characterExtVVal = lambda c: sum(map(lambda m: -sgn(m) * previousChars[0][tuple(Perm.powerCycleType(c, m))] * previousChars[k - m - 1][tuple(c)], range(1,k))) / (k + 0.0)
+	previousChars = [characterExtV(n, i) for i in range(0,k)]
+	characterExtVVal = lambda c: sum(map(lambda m: -sgn(m) * previousChars[1][tuple(Perm.powerCycleType(c, m))] * previousChars[k - m][tuple(c)], range(1,k + 1))) / k
 	return {tuple(cycleType): characterExtVVal(cycleType) for cycleType in cycleTypes}
 
 # returns the value of the the character of the ideal on a permutation
@@ -125,7 +128,7 @@ def charVal(n, i, idealBasis, indices, iBMPseudoInv, perm):
 	# compute the trace of inv(iBM)*permActionMatrix, which is the desired character
 	# first handle case where iBMPseudoInv is 1x1
 	if iBMPseudoInv.shape[0] == 1:
-		trace = iBMPseudoInv[0] * pAM[0,0]
+		trace = iBMPseudoInv[0,0] * pAM[0,0]
 	else:
 		trace = 0
 		for j in range(pAM.shape[1]):
@@ -165,6 +168,7 @@ def characterDump(m, n, i, filename):
 	output = open(filename, 'a')
 	for k in xrange(m, n + 1):
 		characterValues = (k, i), character(k, i)
+		print(characterValues)
 		pickle.dump(characterValues, output)
 
 	output.close()

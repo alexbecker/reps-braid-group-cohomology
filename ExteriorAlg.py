@@ -115,7 +115,7 @@ class Element:
 	def add(self, y):
 		result = []
 		i = 0
- 		for elem in self.coeffVectorPairs:
+		for elem in self.coeffVectorPairs:
 			coeff, basisVector = elem
 			while i < len(y.coeffVectorPairs) and basisVector > y.coeffVectorPairs[i][1]:
 				result.append(y.coeffVectorPairs[i])

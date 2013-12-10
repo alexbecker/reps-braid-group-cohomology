@@ -21,10 +21,9 @@ def likelyMonomials(d, r):
 # works by minimizing the error across V_x through V_n where x is as small as possible s.t. its ith exterior product is nonzero
 # obtains the degree d and number of variables r from stdin, or alternatively a list of monomials
 # retrieves the character values from filename
-def cyclePolynomial(i, filename):
+def cyclePolynomial(x, i, filename):
 	# compute the smallest possible x such that the ith exterior power of x is nonzero
-	x = 2
-	while len(V(x)) < i:
+	while x < 2 or len(V(x)) < i:
 		x += 1
 
 	# retrieve character values
@@ -43,6 +42,10 @@ def cyclePolynomial(i, filename):
 
 	# filter character values to get characters for correct i and remove characters for V_k, k < x
 	characterVals = filter(lambda y: y[0][0] >= x and y[0][1] == i, characterVals)
+
+	# check character values
+	for val in characterVals:
+		print(val)
 
 	# adjust x to be the smallest k such that the character of V_k is included in characterVals
 	x = characterVals[0][0][0]	
@@ -84,5 +87,5 @@ def cyclePolynomial(i, filename):
 
 # MAIN: runs cyclePolynomial(n, i)
 if __name__ == '__main__':
-	cyclePolynomial(int(argv[1]), argv[2])
+	cyclePolynomial(int(argv[1]), int(argv[2]), argv[3])
 
