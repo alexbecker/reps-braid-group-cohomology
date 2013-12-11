@@ -60,14 +60,18 @@ def ideal(n, i):
 	for j in range(n):
 		for k in range(n):
 			for l in range(n):
-				if True: #(i<j and j<k) or (i<k and k<j) or (j<i and i<k):
-					r = R(j, k, l)
-					# we make use of the fact that x * R(j, k, l) is invariant 
-					# under substituting (in x) elements appearing in R(j, k, l)
-					#VnReduced = [v for v in V(n) if v != makePair(j, k) and v != makePair(k, l)]
-					VnReduced = V(n)
-					basisReduced = [ea.Element([(1, basisVector)]) for basisVector in ss.subsets(VnReduced, i - 2)]
-					genSet.extend([x.mult(r) for x in basisReduced])
+				# only consider i,j,k distinct
+				if j != k and j != l and k != l:
+					a, b, c = makePair(j, k), makePair(k, l), makePair(l, j)
+					# use the fact that R(j,k,l) is invariant up to sign under switching a,b,c
+					if (a<b and b<c) or (a<c and c<b) or (b<a and a<c):
+						r = ea.Element(list(map(ea.standardForm, [(1, [a, b]), (1, [b, c]), (1, [c, a])])))
+						# we make use of the fact that x * R(j, k, l) is invariant 
+						# under substituting a, b, and c in x
+						VnReduced = [v for v in V(n) if v != b and v != c]
+						basisReduced = [ea.Element([(1, basisVector)]) for basisVector in ss.subsets(VnReduced, i - 2)]
+
+						genSet.extend([x.mult(r) for x in basisReduced])
 
 	# remove empty elements
 	genSet = list(filter(lambda x: x.coeffVectorPairs, genSet))
