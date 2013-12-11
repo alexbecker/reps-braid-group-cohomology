@@ -39,8 +39,8 @@ def applyPermV(perm, elt):
 # defines the vector R_{i,j,k}
 def R(j, k, l):
 	return ea.Element(list(map(ea.standardForm, [(1, [makePair(j, k), makePair(k, l)]), 
-											(1, [makePair(k, l), makePair(l, j)]),
-											(1, [makePair(l, j), makePair(j, k)])])))
+												 (1, [makePair(k, l), makePair(l, j)]),
+												 (1, [makePair(l, j), makePair(j, k)])])))
 
 # applies a permutation to an element of the kth exterior power of V_n
 def applyPermExtV(perm, elt):
@@ -61,7 +61,7 @@ def ideal(n, i):
 		for k in range(n):
 			for l in range(n):
 				if True: #(i<j and j<k) or (i<k and k<j) or (j<i and i<k):
-					r = R(i, j, k)
+					r = R(j, k, l)
 					# we make use of the fact that x * R(j, k, l) is invariant 
 					# under substituting (in x) elements appearing in R(j, k, l)
 					#VnReduced = [v for v in V(n) if v != makePair(j, k) and v != makePair(k, l)]
