@@ -13,8 +13,8 @@ def standardForm(coeffVectorPair):
 	if length == 1:
 		return coeffVectorPair
 	
-	firstHalf = basisVector[:(length+1)/2]
-	secondHalf = basisVector[(length+1)/2:]
+	firstHalf = basisVector[:(length+1)//2]
+	secondHalf = basisVector[(length+1)//2:]
 	sign1, firstHalfSorted = standardForm((1, firstHalf))
 	sign2, secondHalfSorted = standardForm((1, secondHalf))
 
@@ -82,7 +82,7 @@ class Element:
 	def standardForm(self, standardBasisVectors=False):
 		# put the basis vectors in standard form, if not already
 		if not standardBasisVectors:
-			self.coeffVectorPairs = map(standardForm, self.coeffVectorPairs)
+			self.coeffVectorPairs = list(map(standardForm, self.coeffVectorPairs))
 		
 		# sort the result by the basis vector
 		self.coeffVectorPairs.sort(key=lambda x: x[1])

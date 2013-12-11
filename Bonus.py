@@ -36,15 +36,15 @@ def applyPermV(perm, elt):
 
 # defines the vector R_{i,j,k}
 def R(j, k, l):
-	return ea.Element(map(ea.standardForm, [(1, [makePair(j, k), makePair(k, l)]), 
+	return ea.Element(list(map(ea.standardForm, [(1, [makePair(j, k), makePair(k, l)]), 
 											(1, [makePair(k, l), makePair(l, j)]),
-											(1, [makePair(l, j), makePair(j, k)])]))
+											(1, [makePair(l, j), makePair(j, k)])])))
 
 # applies a permutation to an element of the kth exterior power of V_n
 def applyPermExtV(perm, elt):
 	permutedElt = []
 	for coeff, basisVector in elt.coeffVectorPairs:
-		permutedElt.append((coeff, map(lambda x: applyPermV(perm, x), basisVector)))
+		permutedElt.append((coeff, list(map(lambda x: applyPermV(perm, x), basisVector))))
 
 	result = ea.Element(permutedElt)
 	result.standardForm()
@@ -65,7 +65,7 @@ def ideal(n, i):
 					genSet.extend([x.mult(R(j, k, l)) for x in basis])
 
 	# remove empty elements
-	genSet = filter(lambda x: x.coeffVectorPairs, genSet)
+	genSet = list(filter(lambda x: x.coeffVectorPairs, genSet))
 
 	ea.getBasis(genSet)
 
@@ -78,8 +78,8 @@ def idealBasisMatrix(n, i, idealBasis, indices):
 
 	basisMatrix = lil_matrix((len(indices), len(idealBasis)))
 
-	for j in xrange(len(idealBasis)):
-		for k in xrange(len(idealBasis[j].coeffVectorPairs)):
+	for j in range(len(idealBasis)):
+		for k in range(len(idealBasis[j].coeffVectorPairs)):
 			coeff, basisVector = idealBasis[j].coeffVectorPairs[k]
 			basisMatrix[indices[tuple(basisVector)], j] = coeff
 
@@ -91,9 +91,9 @@ def idealBasisMatrix(n, i, idealBasis, indices):
 def permActionMatrix(n, i, idealBasis, indices, perm):
 	actionMatrix = lil_matrix((len(indices), len(idealBasis)))
 
-	for j in xrange(len(idealBasis)):
+	for j in range(len(idealBasis)):
 		imageVector = applyPermExtV(perm, idealBasis[j])
-		for k in xrange(len(imageVector.coeffVectorPairs)):
+		for k in range(len(imageVector.coeffVectorPairs)):
 			coeff, basisVector = imageVector.coeffVectorPairs[k]
 			actionMatrix[indices[tuple(basisVector)], j] = coeff
 
@@ -168,13 +168,13 @@ def character(n, i):
 
 # returns a dictionary from cycle types (as tuples) to character values for the desired character
 def characterDict(n, i):
-	return dict(zip(map(tuple, Perm.partitions(1, n)), character(n, i)))
+	return dict(zip(list(map(tuple, Perm.partitions(1, n)), character(n, i))))
 
 # stores lists of character values in a given file for use later
 # specifically, the characters on V_m through V_n
 def characterDump(m, n, i, filename):
-	output = open(filename, 'a')
-	for k in xrange(m, n + 1):
+	output = open(filename, 'ab')
+	for k in range(m, n + 1):
 		characterValues = (k, i), character(k, i)
 		print(characterValues)
 		pickle.dump(characterValues, output)

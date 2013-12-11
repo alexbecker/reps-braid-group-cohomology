@@ -8,7 +8,7 @@ def fromCycleType(n, cycleType):
 	result = []
 	i = 0
 	for length in cycleType:
-		result.extend(range(i + 1, i + length) + [i])
+		result.extend(list(range(i + 1, i + length)) + [i])
 		i += length
 
 	return result

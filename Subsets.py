@@ -9,13 +9,13 @@ def subsets(s, k):
 	if k == 0:
 		return [[]]
 
-	smallSubsets = map(lambda x: [s[0]] + x, subsets(s[1:], k - 1))	# subsets starting with s[0]
+	smallSubsets = list(map(lambda x: [s[0]] + x, subsets(s[1:], k - 1)))	# subsets starting with s[0]
 	largeSubsets = subsets(s[1:], k)								# subsets starting with larger elts
 
 	return smallSubsets + largeSubsets
 
 # returns a dictionary from subsets of s of size k (as tuples) to indices
 def indices(s, k):
-	tuples = map(tuple, subsets(s, k))
+	tuples = list(map(tuple, subsets(s, k)))
 
 	return dict(zip(tuples, range(len(tuples))))
