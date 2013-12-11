@@ -55,16 +55,18 @@ def applyPermExtV(perm, elt):
 
 # returns a generating set for the ideal of the ith exterior power of V_n
 def ideal(n, i):
-	# compute a basis for the (i-2)nd  exterior power
-	basis = [ea.Element([(1, basisVector)]) for basisVector in ss.subsets(V(n), i - 2)]
-
 	# compute a generating set for the ideal
 	genSet = []
 	for j in range(n):
 		for k in range(n):
 			for l in range(n):
 				if (i<j and j<k) or (i<k and k<j) or (j<i and i<k):
-					genSet.extend([x.mult(R(j, k, l)) for x in basis])
+					r = R(i, j, k)
+					# we make use of the fact that x * R(j, k, l) is invariant 
+					# under substituting (in x) elements appearing in R(j, k, l)
+					VnReduced = [v for v in V(n) if v != makePair(j, k) and v != makePair(k, l)]
+					basisReduced = [ea.Element([(1, basisVector)]) for basisVector in ss.subsets(VnReduced, i - 2)]
+					genSet.extend([x.mult(r) for x in basisReduced])
 
 	# remove empty elements
 	genSet = list(filter(lambda x: x.coeffVectorPairs, genSet))
