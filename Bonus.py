@@ -57,10 +57,15 @@ def ideal(n, i):
 	basis = [ea.Element([(1, basisVector)]) for basisVector in ss.subsets(V(n), i - 2)]
 
 	# compute a generating set for the ideal
-	genSet = [x.mult(R(j, k, l)) for x in basis for j in range(n) for k in range(n) for l in range(n) if j != k and j != l and k != l]
+	genSet = []
+	for j in range(n):
+		for k in range(n):
+			for l in range(n):
+				if (i<j and j<k) or (i<k and k<j) or (j<i and i<k):
+					genSet.extend([x.mult(R(j, k, l)) for x in basis])
 
-	# remove empty elements from basis
-	genSet = filter(lambda x: x.coeffVectorPairs != [], genSet)
+	# remove empty elements
+	genSet = filter(lambda x: x.coeffVectorPairs, genSet)
 
 	ea.getBasis(genSet)
 
@@ -128,7 +133,10 @@ def charVal(n, i, idealBasis, indices, iBMPseudoInv, perm):
 	# compute the trace of inv(iBM)*permActionMatrix, which is the desired character
 	# first handle case where iBMPseudoInv is 1x1
 	if iBMPseudoInv.shape[0] == 1:
-		trace = iBMPseudoInv[0,0] * pAM[0,0]
+		if len(iBMPseudoInv.shape) == 1:
+			trace = iBMPseudoInv[0] * pAM[0,0]
+		else:
+			trace = iBMPseudoInv[0,0] * pAM[0,0]
 	else:
 		trace = 0
 		for j in range(pAM.shape[1]):
