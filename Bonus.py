@@ -60,11 +60,12 @@ def ideal(n, i):
 	for j in range(n):
 		for k in range(n):
 			for l in range(n):
-				if (i<j and j<k) or (i<k and k<j) or (j<i and i<k):
+				if True: #(i<j and j<k) or (i<k and k<j) or (j<i and i<k):
 					r = R(i, j, k)
 					# we make use of the fact that x * R(j, k, l) is invariant 
 					# under substituting (in x) elements appearing in R(j, k, l)
-					VnReduced = [v for v in V(n) if v != makePair(j, k) and v != makePair(k, l)]
+					#VnReduced = [v for v in V(n) if v != makePair(j, k) and v != makePair(k, l)]
+					VnReduced = V(n)
 					basisReduced = [ea.Element([(1, basisVector)]) for basisVector in ss.subsets(VnReduced, i - 2)]
 					genSet.extend([x.mult(r) for x in basisReduced])
 
