@@ -9,6 +9,8 @@ import pickle
 from sys import argv
 from scipy.sparse import *
 from scipy.sparse.linalg import spsolve
+from multiprocessing import Pool
+from parmap import parmap
 
 # helper function for various functions
 def sgn(m):
@@ -164,11 +166,13 @@ def character(n, i):
 	iBM = idealBasisMatrix(n, i, idealBasis, indices)
 	iBMNormal = iBM.T.dot(iBM)
 	iBMPseudoInv = spsolve(iBMNormal, iBM.T)
+	print('shape: {}, nonzero entries: {}'.format(iBMPseudoInv.shape, iBMPseudoInv.nnz))
 
-	print('density: {}'.format(iBMPseudoInv.nnz / (iBMPseudoInv.shape[0] * iBMPseudoInv.shape[1])))
+	# define the character function
+	char = lambda cycleType: characterExtVDict[tuple(cycleType)] - charVal(n, i, idealBasis, indices, iBMPseudoInv, Perm.fromCycleType(n, cycleType))
 
 	print('calculating character')
-	return [characterExtVDict[tuple(cycleType)] - charVal(n, i, idealBasis, indices, iBMPseudoInv, Perm.fromCycleType(n, cycleType)) for cycleType in cycleTypes]
+	return parmap(char, cycleTypes)
 
 # returns a dictionary from cycle types (as tuples) to character values for the desired character
 def characterDict(n, i):
