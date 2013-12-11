@@ -9,6 +9,7 @@ import pickle
 from sys import argv
 from scipy.sparse import *
 from scipy.sparse.linalg import spsolve
+from scikits.sparse.cholmod import cholesky
 
 # helper function for various functions
 def sgn(m):
@@ -131,12 +132,13 @@ def charVal(n, i, idealBasis, indices, iBMPseudoInv, perm):
 	pAM = permActionMatrix(n, i, idealBasis, indices, perm)
 
 	# compute the trace of inv(iBM)*permActionMatrix, which is the desired character
-	# first handle case where iBMPseudoInv is 1x1
+	# first handle case where iBMPseudoInv is 1xk
 	if iBMPseudoInv.shape[0] == 1:
-		if len(iBMPseudoInv.shape) == 1:
-			trace = iBMPseudoInv[0] * pAM[0,0]
+		trace = iBMPseudoInv.dot(pAM)
+		if len(trace.shape) == 1:
+			trace = trace[0]
 		else:
-			trace = iBMPseudoInv[0,0] * pAM[0,0]
+			trace = trace[0,0]
 	else:
 		trace = 0
 		for j in range(pAM.shape[1]):
@@ -162,7 +164,8 @@ def character(n, i):
 	print('calculating character')
 	iBM = idealBasisMatrix(n, i, idealBasis, indices)
 	iBMNormal = iBM.T.dot(iBM)
-	iBMPseudoInv = spsolve(iBMNormal, iBM.T, use_umfpack=False)
+	r = cholesky(iBMNormal)
+	iBMPseudoInv = spsolve(r, spsolve(r.T, iBM.T))
 
 	return [characterExtVDict[tuple(cycleType)] - charVal(n, i, idealBasis, indices, iBMPseudoInv, Perm.fromCycleType(n, cycleType)) for cycleType in cycleTypes]
 
