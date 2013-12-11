@@ -9,7 +9,6 @@ import pickle
 from sys import argv
 from scipy.sparse import *
 from scipy.sparse.linalg import spsolve
-from scikits.sparse.cholmod import cholesky
 
 # helper function for various functions
 def sgn(m):
@@ -161,12 +160,14 @@ def character(n, i):
 	print('calculating ideal basis')
 	idealBasis = ideal(n, i)
 
-	print('calculating character')
+	print('calculating pseudoinverse')
 	iBM = idealBasisMatrix(n, i, idealBasis, indices)
 	iBMNormal = iBM.T.dot(iBM)
-	r = cholesky(iBMNormal)
-	iBMPseudoInv = spsolve(r, spsolve(r.T, iBM.T))
+	iBMPseudoInv = spsolve(iBMNormal, iBM.T)
 
+	print('density: {}'.format(iBMPseudoInv.nnz / (iBMPseudoInv.shape[0] * iBMPseudoInv.shape[1])))
+
+	print('calculating character')
 	return [characterExtVDict[tuple(cycleType)] - charVal(n, i, idealBasis, indices, iBMPseudoInv, Perm.fromCycleType(n, cycleType)) for cycleType in cycleTypes]
 
 # returns a dictionary from cycle types (as tuples) to character values for the desired character
