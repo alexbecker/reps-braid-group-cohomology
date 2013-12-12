@@ -38,7 +38,7 @@ def weight(monomial):
 	multiplier, result = 1, 0
 	for degree in monomial:
 		result += multiplier * degree
-		multiplier += 2.5 / len(monomial)
+		multiplier += 4 / len(monomial)
 
 	return result 
 

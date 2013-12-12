@@ -21,9 +21,10 @@ def likelyMonomials(d, r):
 # works by minimizing the error across V_x through V_n where x is as small as possible s.t. its ith exterior product is nonzero
 # obtains the degree d and number of variables r from stdin, or alternatively a list of monomials
 # retrieves the character values from filename
-def cyclePolynomial(x, i, filename):
+def cyclePolynomial(i, filename):
 	# compute the smallest possible x such that the ith exterior power of x is nonzero
-	while x < 2 or len(V(x)) < i:
+	x = 2
+	while len(V(x)) < i:
 		x += 1
 
 	# retrieve character values
@@ -41,7 +42,7 @@ def cyclePolynomial(x, i, filename):
 	characterVals.sort()
 
 	# filter character values to get characters for correct i and remove characters for V_k, k < x
-	characterVals = filter(lambda y: y[0][0] >= x and y[0][1] == i, characterVals)
+	characterVals = list(filter(lambda y: y[0][0] >= x and y[0][1] == i, characterVals))
 
 	# check character values
 	for val in characterVals:
@@ -61,12 +62,12 @@ def cyclePolynomial(x, i, filename):
 	satisfied = 'n'
 	while satisfied != 'y':
 		# ask user whether to supply terms
-		supplyTerms = raw_input('Enter terms manually? (y/n): ')
+		supplyTerms = input('Enter terms manually? (y/n): ')
 		if supplyTerms == 'y':
-			terms = loads(raw_input('Enter terms: '))
+			terms = loads(input('Enter terms: '))
 		else:
-			d = int(raw_input('Enter d: '))
-			r = int(raw_input('Enter r: '))
+			d = int(input('Enter d: '))
+			r = int(input('Enter r: '))
 			terms = likelyMonomials(d, r)
 
 		# find solution
@@ -74,18 +75,18 @@ def cyclePolynomial(x, i, filename):
 		print(soln)
 
 		# refine soln if desired
-		refine = raw_input('Refine? (y/n): ')
+		refine = input('Refine? (y/n): ')
 		while refine == 'y':
 			terms = soln.nonzeroTerms()
 			soln = cp.multiInterpolate(x, n, characterVals, terms)
 			print(soln)
-			refine = raw_input('Refine? (y/n): ')
+			refine = input('Refine? (y/n): ')
 
-		satisfied = raw_input('Satisfied? (y/n): ')
+		satisfied = input('Satisfied? (y/n): ')
 
 	return soln
 
 # MAIN: runs cyclePolynomial(n, i)
 if __name__ == '__main__':
-	cyclePolynomial(int(argv[1]), int(argv[2]), argv[3])
+	cyclePolynomial(int(argv[1]), argv[2])
 

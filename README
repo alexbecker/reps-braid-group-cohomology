@@ -6,9 +6,10 @@ ExteriorAlg: Contains functions for computing with exterior algebras, and implem
 CyclePolynomials: Contains functions for computing with cycle polynomials, and implements the CyclePoly class.
 Bonus: Computes the values of the character.
 Interpolate: Interpolates the character as a cycle polynomial.
+parmap: Implements a more flexible version of Pool.map.
 
 Results:
-The i=2,i=3 cases have been solved and are stored in results.txt.
+The i=1,2,3 cases have been solved and are stored in results.txt.
 
 Known issues:
 Numerical stability becomes poor for i>=4 in the current implementation of Bonus.

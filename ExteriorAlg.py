@@ -165,7 +165,7 @@ def getBasis(spanningSet):
 		coeff, basisVector = spanningSet[i].coeffVectorPairs[0]
 		j = i + 1
 		while j < len(spanningSet):
-			multiplier = - spanningSet[j].getCoeff(basisVector) / float(coeff)
+			multiplier = - spanningSet[j].getCoeff(basisVector) / coeff
 			if multiplier != 0:
 				spanningSet[j] = spanningSet[j].add(spanningSet[i].scale(multiplier))
 		
